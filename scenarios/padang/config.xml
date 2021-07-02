@@ -1,0 +1,84 @@
+<?xml version="1.0" ?>
+<!DOCTYPE config SYSTEM "http://www.matsim.org/files/dtd/config_v2.dtd">
+<config>
+
+	<module name="global">
+		<param name="randomSeed" value="4711" />
+		<param name="numberOfThreads" value="6" /> <!--  Threads zur Bearbeitung (Test mit 2,4,8) -->
+		<param name="coordinateSystem" value="EPSG:32747" /> <!-- Hier Koordinatensystem anpassen? -->
+	</module>
+
+	<module name="network">
+		<param name="inputNetworkFile" value="padang_net_evac_v20080618.xml" />
+		<param name="timeVariantNetwork" value="true" />
+		<param name="inputChangeEventsFile" value="change_events_v20100707_el_entfernt.xml" />
+	</module>
+
+	<module name="plans">
+	<!--	<param name="inputPlansFile" value="500.plans.xml" /> 	mal andere Pläne versuchen-->
+	  <param name="inputPlansFile" value="padang_plans_v20100715_EMPTY_ROUTES.xml" />  
+	</module>
+
+	
+	<module name="controler">
+		<param name="outputDirectory" value="./output" />
+		<param name="firstIteration" value="0" />
+		<param name="lastIteration" value="1000" />
+		<param name="writeEventsInterval" value="500" /> <!-- Wie oft schreibt der controller diese Werte aus (in Iterationen) -->
+		<param name="writePlansInterval" value="500" />
+		<!--<param name="fractionOfIterationsToStartScoreMSA" value="0.75"/>  zur Stabilisierung der Ergebnisse nach x% der ERgebnisse (aber nur mit logit??) -->
+	</module>
+
+	<module name="qsim">
+		<!-- "start/endTime" of MobSim (00:00:00 == take earliest activity time/ run as long as active vehicles exist) -->
+		
+		<param name="startTime" value="00:00:00" />
+		<param name="endTime" value="12:00:00" />
+		<param name="flowCapacityFactor" value="0.5" /> <!-- Verringerung der Flusskapazität (Durchsatz pro Zeiteinheit) auf Links um volle Bevölkerung zu simulieren (Anteilig 10%,50%,100%) -->
+		<param name="storageCapacityFactor" value="0.5" /> <!-- Wie FlowCapacityFactor aber zu Kapa auf den Links -->
+		<param name="numberOfThreads" value="4" /> <!--  Threads zur Bearbeitung (Test mit 2,4,8) -->
+		<param name="stuckTime" value="30.0" /> <!-- nach eine bestimmten Zeit werden Agenten als stuck beschrieben -> man kann was mit dem Zustand machen (wie in Berlin Szenario)-->
+		<param name="trafficDynamics" value="kinematicWaves" /> <!-- beschreibt, dass Verkehr sich in Wellen bewegt -> keiner rückt sofort nach -->
+		<param name = "snapshotperiod"	value = "00:00:00"/> <!-- 00:00:00 means NO snapshot writing -->
+		
+	</module>
+
+	<module name="planCalcScore">
+	
+		<param name="learningRate" value="1.0" /> <!-- kopieren aus Berlin Szenario???	 -->
+		<param name="BrainExpBeta" value="2.0" />
+		
+		<param name="lateArrival" value="-18" />
+		<param name="earlyDeparture" value="-0" />
+		<param name="performing" value="+6" />
+		<param name="waiting" value="-0" />
+
+		<param name="activityType_0"            value="h" /> <!-- home -->
+		<param name="activityPriority_0"        value="1" />
+		<param name="activityTypicalDuration_0" value="12:00:00" />
+		<param name="activityMinimalDuration_0" value="08:00:00" />
+		
+		<param name="activityType_1"            value="w" /> <!-- work -->		<!-- muss angepasst werden?? -->
+		<param name="activityPriority_1"        value="1" />
+		<param name="activityTypicalDuration_1" value="12:00:00" />
+		<param name="activityMinimalDuration_1" value="08:00:00" />
+		<!--	<param name="activityOpeningTime_1"     value="07:00:00" />
+				<param name="activityLatestStartTime_1" value="09:00:00" />
+				<param name="activityEarliestEndTime_1" value="" />
+				<param name="activityClosingTime_1"     value="18:00:00" /> -->
+	
+	</module>
+	
+	<module name="strategy">
+	
+		<param name="maxAgentPlanMemorySize" value="5" /> <!-- 0 means unlimited -->
+
+		<param name="ModuleProbability_1" value="0.9" />
+		<param name="Module_1" value="ChangeExpBeta" />
+
+		<param name="ModuleProbability_2" value="0.1" />
+		<param name="Module_2" value="ReRoute" />
+		
+	</module>
+
+</config>
